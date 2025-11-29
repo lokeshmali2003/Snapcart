@@ -11,7 +11,7 @@ const userSchema = new mongoose.Schema({
     },  
     password: {
         type: String,
-        required: true
+        required: false
     },
     mobile: {
         type: String,
@@ -21,7 +21,11 @@ const userSchema = new mongoose.Schema({
         type: String,
         enum: ['user', 'deliveryBoy', 'admin'],
         default: 'user'
+    },
+    image: {
+        type: String
     }   
+
 }, { timestamps: true });
 
 const User = mongoose.model('User', userSchema);

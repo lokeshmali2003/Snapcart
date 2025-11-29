@@ -73,7 +73,7 @@ export const authOptions = {
 
   callbacks: {
     async signIn({ user, account}) {
-      if (account?.provider == "google") {
+      if (account.provider == "google") {
         try {
           await connectDB();
           let existingUser = await User.findOne({ email: user.email });
@@ -81,9 +81,13 @@ export const authOptions = {
             existingUser = await User.create({    
               name: user.name,
               email: user.email,
-              password: "",
+              image: user.image
             });
           }
+          user.id = existingUser._id.toString();
+          user.role = existingUser.role;
+          return true;  
+          
         } catch (error) {
           console.error("Error in signIn callback:", error);
           return false;

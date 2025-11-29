@@ -5,38 +5,39 @@ import google from '../assets/google.png';
 import { motion } from 'motion/react'
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { signIn } from 'next-auth/react';
 
 function RegisterForm({ prevStep }) {
     const [name, setname] = React.useState('');
     const [email, setemail] = React.useState('');
-    const [password, setpassword] = React.useState(''); 
-    const [showPassword, setshowPassword] = React.useState(false); 
+    const [password, setpassword] = React.useState('');
+    const [showPassword, setshowPassword] = React.useState(false);
     const [loading, setLoading] = React.useState(false); // ✅ Move inside component
     const router = useRouter();
 
     const handleRegister = async (e) => {
         e.preventDefault();
-        setLoading(true);   
-        try {   
+        setLoading(true);
+        try {
             const result = await axios.post('/api/auth/register', { name, email, password }, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
             });
             console.log('Registration Response:', result.data);
-            if (result.status >= 200 && result.status < 300)  {
+            if (result.status >= 200 && result.status < 300) {
                 alert('Registration successful! Please log in.');
-                prevStep(1); // Go back to welcome or login step
+                router.push('/login');
             } else {
                 alert('Registration failed. Please try again.');
-            }   
+            }
         } catch (error) {
             const msg = error.response?.data?.message || "Registration failed";
             alert(msg);
         } finally {
             setLoading(false);
-        }   
-    }   
+        }
+    }
 
     return (
         <div className='flex flex-col items-center justify-center min-h-screen px-6 py-10 bg-white relative'>
@@ -44,30 +45,30 @@ function RegisterForm({ prevStep }) {
                 <ArrowLeft className='w-6 h-6 text-green-600 cursor-pointer' />
                 <p className='text-green-600 font-bold'>Back</p>
             </div>
-            <div className='mt-6 w-full max-w-md bg-green-50 p-8 rounded-lg shadow-lg'>     
+            <div className='mt-6 w-full max-w-md bg-green-50 p-8 rounded-lg shadow-lg'>
                 <motion.h2 initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className='text-3xl font-bold mb-6 text-green-700 text-center'>Create Your Account</motion.h2>
                 <form className='space-y-4' onSubmit={handleRegister}>
                     <div>
                         <label className='block text-gray-700'>Name</label>
                         <input type="text" className='w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500' placeholder='Your Name'
-                        onChange={(e)=>setname(e.target.value)} value={name} />
+                            onChange={(e) => setname(e.target.value)} value={name} />
                     </div>
                     <div>
                         <label className='block text-gray-700'>Email</label>
-                        <input type="email" className='w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500' placeholder='Your Email' onChange={(e)=>setemail(e.target.value)} value={email} />  
+                        <input type="email" className='w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500' placeholder='Your Email' onChange={(e) => setemail(e.target.value)} value={email} />
                     </div>
                     <div>
                         <label className='block text-gray-700'>Password</label>
-                        <input type={showPassword ? "text" : "password"} className='w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500' placeholder='Create a Password' onChange={(e)=>setpassword(e.target.value)} value={password}  />
+                        <input type={showPassword ? "text" : "password"} className='w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500' placeholder='Create a Password' onChange={(e) => setpassword(e.target.value)} value={password} />
                         <div className='mt-2'>
                             <input type="checkbox" id='showPassword' checked={showPassword} onChange={() => setshowPassword(!showPassword)} />
                             <label htmlFor='showPassword' className='ml-2 text-gray-700 cursor-pointer'>Show Password</label>
                         </div>
                     </div>
                     {
-                        (()=>{
+                        (() => {
                             const isFormValid = name.trim() !== '' && email.trim() !== '' && password.trim() !== '';
-                            if(isFormValid){
+                            if (isFormValid) {
                                 return (
                                     <button type="submit" className='w-full bg-green-600 text-white py-2 rounded-md hover:bg-green-700 transition duration-300'>
                                         {loading ? "Registering..." : "Register"}
@@ -78,20 +79,25 @@ function RegisterForm({ prevStep }) {
                                     <button type="submit" disabled className='w-full bg-gray-400 text-white py-2 rounded-md cursor-not-allowed'>Register</button>
                                 )
                             }
-                        })()    
+                        })()
                     }
                     <div className='flex items-center justify-center my-2'>
                         <span className='flex-grow border-t border-gray-300'></span>
                         <span className='mx-2 text-gray-500'>OR</span>
                         <span className='flex-grow border-t border-gray-300'></span>
-                    </div> 
+                    </div>
                     <div>
-                        <button className='text-center w-full text-gray-600 border border-gray-300 py-2 rounded-md cursor-pointer'> 
-                            <Image src={google} alt="Google" width={20} height={20} className="inline-block mr-2" />
+                        <button
+                            type="button"
+                            onClick={() => signIn("google")}
+                            className="flex items-center justify-center w-full border border-gray-300 py-2 rounded-md text-gray-600"
+                        >
+                            <Image src={google} width={20} height={20} className="mr-2" alt="Google" />
                             Continue with Google
                         </button>
+
                     </div>
-                </form> 
+                </form>
                 <div>
                     <p className='text-center text-gray-600 mt-4'>Already have an account? <span className='text-green-600 font-bold cursor-pointer' onClick={() => router.push("/login")}>Sign In</span></p>
                 </div>

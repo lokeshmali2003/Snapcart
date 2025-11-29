@@ -93,7 +93,7 @@ export default function Login() {
             <span className="flex-grow border-t border-gray-300"></span>
           </div>
 
-          <button className="w-full text-gray-600 border py-2 rounded-md">
+          <button className="w-full text-gray-600 border py-2 rounded-md" onClick={() => signIn("google")}>
             <Image
               src={google}
               width={20}
