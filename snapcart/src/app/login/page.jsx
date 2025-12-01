@@ -93,7 +93,9 @@ export default function Login() {
             <span className="flex-grow border-t border-gray-300"></span>
           </div>
 
-          <button className="w-full text-gray-600 border py-2 rounded-md" onClick={() => signIn("google")}>
+        
+        </form>
+          <button className="w-full text-gray-600 border py-2 rounded-md" onClick={() => signIn("google",{ callbackUrl: "/" })}>
             <Image
               src={google}
               width={20}
@@ -103,7 +105,6 @@ export default function Login() {
             />
             Continue with Google
           </button>
-        </form>
 
         <p className="text-center text-gray-600 mt-4">
           Don't have an account?{" "}

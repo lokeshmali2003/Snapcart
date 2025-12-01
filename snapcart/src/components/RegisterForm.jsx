@@ -24,7 +24,7 @@ function RegisterForm({ prevStep }) {
                     'Content-Type': 'application/json'
                 }
             });
-            console.log('Registration Response:', result.data);
+              router.push('/login');
             if (result.status >= 200 && result.status < 300) {
                 alert('Registration successful! Please log in.');
                 router.push('/login');
@@ -87,17 +87,18 @@ function RegisterForm({ prevStep }) {
                         <span className='flex-grow border-t border-gray-300'></span>
                     </div>
                     <div>
-                        <button
+                      
+
+                    </div>
+                </form>
+                  <button
                             type="button"
-                            onClick={() => signIn("google")}
+                            onClick={() => signIn("google", { callbackUrl: "/" })}
                             className="flex items-center justify-center w-full border border-gray-300 py-2 rounded-md text-gray-600"
                         >
                             <Image src={google} width={20} height={20} className="mr-2" alt="Google" />
                             Continue with Google
                         </button>
-
-                    </div>
-                </form>
                 <div>
                     <p className='text-center text-gray-600 mt-4'>Already have an account? <span className='text-green-600 font-bold cursor-pointer' onClick={() => router.push("/login")}>Sign In</span></p>
                 </div>
