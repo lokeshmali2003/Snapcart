@@ -9,7 +9,8 @@ function EditRoleMobile() {
         { id: "admin", label: "Admin", icon: UserCogIcon },
         { id: "deliveryBoy", label: "Delivery Boy", icon: Bike }
     ])
-    const [selectedRole, setSelectedRole] = useState("")
+    const [selectedRole, setSelectedRole] = useState("");
+    const [mobile, setMobile]=useState("")
 
     return (
         <div className='flex flex-col min-h-screen p-6 w-full'>
@@ -50,8 +51,24 @@ function EditRoleMobile() {
                     );
                 })}
             </div>
-            <motion.div>
-                
+            <motion.div 
+            initial={{
+                opacity:0
+            }}
+            animate={{
+                opacity:1
+            }}
+            transition={{
+                delay:0.5,
+                duration:0.6
+            }}
+            className='flex flex-col items-center mt-10'
+            >
+                <label htmlFor='mobile'>Enter Your Mobile No.</label>
+                <input type='tel'id='mobile' className='w-64 md:w-80 px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-green-500 focus:outline-none text-gray-800' placeholder='Enter Mobile No.' 
+                onChange={(e)=>setMobile(e.target.value)}
+                />
+
             </motion.div>
 
 
