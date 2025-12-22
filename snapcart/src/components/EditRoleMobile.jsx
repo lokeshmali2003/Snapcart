@@ -13,8 +13,8 @@ function EditRoleMobile() {
     const [mobile, setMobile]=useState("")
 
     return (
-        <div className='flex flex-col min-h-screen p-6 w-full'>
-            <motion.h1
+        <div className='flex flex-col items-center min-h-screen p-6 w-full'>
+            <motion.h1  
                 initial={{
                     opacity: 0,
                     y: -20
@@ -68,6 +68,26 @@ function EditRoleMobile() {
                 <input type='tel'id='mobile' className='w-64 md:w-80 px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-green-500 focus:outline-none text-gray-800' placeholder='Enter Mobile No.' 
                 onChange={(e)=>setMobile(e.target.value)}
                 />
+
+            </motion.div>
+            <motion.div
+             initial={{
+                    opacity: 0,
+                    y: 20
+                }}
+                animate={
+                    {
+                        opacity: 1,
+                        y: 0
+                    }
+                }
+                transition={{
+                    delay:0.7
+                }}
+
+                className={`inline-flex items-center gap-2 font-semibold py-3 px-8 rounded-2xl shadow-md transition-all duration-200 w-[160px] mt-5 ${ selectedRole && mobile.length === 10 ? "bg-green-600 hover:bg-green-700 text-white":"bg-gray-300 text-gray-500 cursor-not-allowed"}`}
+                >
+                    Go To Home
 
             </motion.div>
 
