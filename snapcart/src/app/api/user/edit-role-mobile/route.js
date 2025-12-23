@@ -7,7 +7,7 @@ try{
     await connectDB();
     const {role , mobile} = await req.json();
     const session = await authOptions()
-    const user = User.findOneAndUpdate({email : session?.user.email},{role , mobile})
+    const user = User.findOneAndUpdate({email : session?.user.email},{role , mobile},{new:true});
     if(!user){
         return NextResponse.json(
             {message:"User Not Found"},

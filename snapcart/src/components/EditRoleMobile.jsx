@@ -2,8 +2,11 @@
 import React, { useState } from 'react'
 import { motion } from 'motion/react'
 import { ArrowRight, Bike, User, UserCogIcon } from 'lucide-react'
+import { redirect } from 'next/navigation'
+import axios from 'axios'
 
 function EditRoleMobile() {
+    
     const [roles, setRole] = useState([
         { id: "user", label: "User", icon: User },
         { id: "admin", label: "Admin", icon: UserCogIcon },
@@ -17,9 +20,9 @@ function EditRoleMobile() {
                 role:selectedRole,
                 mobile
             })
-            console.log(result.data)
+            redirect("/");
         }catch(error){
-          console/log(error);
+          console.log(error);
         }
      }
     return (
@@ -96,6 +99,7 @@ function EditRoleMobile() {
                 }}
                 disabled={!mobile.length!==10 || !selectedRole}
                 className={`inline-flex items-center gap-2 font-semibold py-3 px-8 rounded-2xl shadow-md transition-all duration-200 w-[200px] mt-5 ${ selectedRole && mobile.length === 10 ? "bg-green-600 hover:bg-green-700 text-white":"bg-gray-300 text-gray-500 cursor-not-allowed"}`}
+                onClick={handleEdit}
                 >
                     Go To Home
                  <ArrowRight />
