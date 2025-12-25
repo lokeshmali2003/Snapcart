@@ -2,8 +2,6 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
-import Image from "next/image";
-import google from "@/assets/google.png";
 import { motion } from "motion/react";
 
 export default function Login() {
@@ -86,25 +84,7 @@ export default function Login() {
           >
             {loading ? "Logging in..." : "Log In"}
           </button>
-
-          <div className="flex items-center justify-center my-2">
-            <span className="flex-grow border-t border-gray-300"></span>
-            <span className="mx-2 text-gray-500">OR</span>
-            <span className="flex-grow border-t border-gray-300"></span>
-          </div>
-
-        
         </form>
-          <button className="w-full text-gray-600 border py-2 rounded-md" onClick={() => signIn("google",{ callbackUrl: "/" })}>
-            <Image
-              src={google}
-              width={20}
-              height={20}
-              alt="Google"
-              className="inline-block mr-2"
-            />
-            Continue with Google
-          </button>
 
         <p className="text-center text-gray-600 mt-4">
           Don't have an account?{" "}

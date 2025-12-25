@@ -2,10 +2,11 @@
 import React, { useState } from 'react'
 import { motion } from 'motion/react'
 import { ArrowRight, Bike, User, UserCogIcon } from 'lucide-react'
-import { redirect } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import axios from 'axios'
 
 function EditRoleMobile() {
+    const router = useRouter();
     
     const [roles, setRole] = useState([
         { id: "user", label: "User", icon: User },
@@ -20,9 +21,15 @@ function EditRoleMobile() {
                 role:selectedRole,
                 mobile
             })
-            redirect("/");
+            
+            // ✅ Check if request was successful
+            if (result.status === 200) {
+                // ✅ Use window.location for hard refresh to update session
+                window.location.href = "/";
+            }
         }catch(error){
-          console.log(error);
+          console.error("Error:", error);
+          alert(error.response?.data?.message || "Failed to update profile. Please try again.");
         }
      }
     return (
@@ -97,7 +104,7 @@ function EditRoleMobile() {
                 transition={{
                     delay:0.7
                 }}
-                disabled={!mobile.length!==10 || !selectedRole}
+                disabled={mobile.length !== 10 || !selectedRole}
                 className={`inline-flex items-center gap-2 font-semibold py-3 px-8 rounded-2xl shadow-md transition-all duration-200 w-[200px] mt-5 ${ selectedRole && mobile.length === 10 ? "bg-green-600 hover:bg-green-700 text-white":"bg-gray-300 text-gray-500 cursor-not-allowed"}`}
                 onClick={handleEdit}
                 >

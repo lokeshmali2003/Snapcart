@@ -1,11 +1,8 @@
 import { ArrowLeft } from 'lucide-react'
 import React from 'react'
-import Image from 'next/image';
-import google from '../assets/google.png';
 import { motion } from 'motion/react'
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import { signIn } from 'next-auth/react';
 
 function RegisterForm({ prevStep }) {
     const [name, setname] = React.useState('');
@@ -81,24 +78,7 @@ function RegisterForm({ prevStep }) {
                             }
                         })()
                     }
-                    <div className='flex items-center justify-center my-2'>
-                        <span className='flex-grow border-t border-gray-300'></span>
-                        <span className='mx-2 text-gray-500'>OR</span>
-                        <span className='flex-grow border-t border-gray-300'></span>
-                    </div>
-                    <div>
-                      
-
-                    </div>
                 </form>
-                  <button
-                            type="button"
-                            onClick={() => signIn("google", { callbackUrl: "/" })}
-                            className="flex items-center justify-center w-full border border-gray-300 py-2 rounded-md text-gray-600"
-                        >
-                            <Image src={google} width={20} height={20} className="mr-2" alt="Google" />
-                            Continue with Google
-                        </button>
                 <div>
                     <p className='text-center text-gray-600 mt-4'>Already have an account? <span className='text-green-600 font-bold cursor-pointer' onClick={() => router.push("/login")}>Sign In</span></p>
                 </div>

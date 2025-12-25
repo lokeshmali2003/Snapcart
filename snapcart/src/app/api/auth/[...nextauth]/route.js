@@ -1,6 +1,5 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import Google from "next-auth/providers/google";
 import connectDB from "@/lib/db";
 import User from "@/models/user.model";
 import bcrypt from "bcryptjs";
@@ -26,6 +25,10 @@ export const authOptions = {
             throw new Error("Invalid email or password");
           }
 
+          if (!user.password) {
+            throw new Error("Invalid email or password");
+          }
+
           const isPasswordValid = await bcrypt.compare(
             credentials.password,
             user.password
@@ -47,18 +50,6 @@ export const authOptions = {
         }
       },
     }),
-    Google({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,   
-
-    authorization: {
-        params: {
-          scope: "openid email profile",
-        },
-      },
-         
-
-    })
   ],
 
   pages: {
@@ -72,29 +63,6 @@ export const authOptions = {
   },
 
   callbacks: {
-    async signIn({ user, account}) {
-      if (account.provider == "google") {
-        try {
-          await connectDB();
-          let existingUser = await User.findOne({ email: user.email });
-          if (!existingUser) {
-            existingUser = await User.create({    
-              name: user.name,
-              email: user.email,
-              image: user.image
-            });
-          }
-          user.id = existingUser._id.toString();
-          user.role = existingUser.role;
-          return true;  
-          
-        } catch (error) {
-          console.error("Error in signIn callback:", error);
-          return false;
-        }
-      }   
-      return true;
-    },
     async jwt({ token, user }) {
       console.log("JWT callback - token:", token, "user:", user);
       if (user) {
@@ -118,7 +86,7 @@ export const authOptions = {
     },
   },
 
-  secret: process.env.AUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET,
 };
 
 const handler = NextAuth(authOptions);
