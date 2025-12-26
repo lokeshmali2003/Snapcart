@@ -27,12 +27,14 @@ function Nav({user}) {
         <AnimatePresence>
         {open && (
           <motion.div initial={{opacity:0, y:-10, scale:0.95}} animate={{opacity:1, y:0, scale:1}} exit={{opacity:0, y:-10, scale:0.95}} transition={{duration:0.2}} className='absolute top-10 right-0 w-48 bg-white rounded-lg shadow-lg p-2'>
-            <motion.div>
-              <Link href='/profile' className='flex items-center space-x-2'>
-                <UserIcon className='w-6 h-6 text-green-600 hover:text-gray-200 transition-colors' />
-                <span className='text-green-600 hover:text-gray-200 transition-colors'>Profile</span>
-              </Link>
+            <motion.div className='flex w-10 h-10 rounded-full bg-green-500 p-1 m-1 flex items-center justify-center transition-colors overflow-hidden shadow-md  transition-transform duration-300 relative'>
+            {user.image?<Image src={user.image} alt={user.name} width={32} height={32} className='object-cover rounded-full' />:<UserIcon className='w-8 h-8 text-white hover:text-gray-200 transition-colors' />}
             </motion.div>
+            <div className='text-green-600 font-bold'>{user.name}</div>
+            <div className='text-gray-500 text-sm'>{user.email}</div>
+            <div className='text-gray-500 text-sm'>{user.role}</div>
+            <div className='text-gray-500 text-sm'>{user.mobile}</div>
+            <Link href='/login' className='text-green-600 font-bold'>Logout</Link>
           </motion.div>
         )}
         </AnimatePresence>
