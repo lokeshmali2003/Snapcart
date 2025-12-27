@@ -5,6 +5,7 @@ import { AnimatePresence , motion } from 'motion/react'
 import { SearchIcon,  ShoppingCartIcon, UserIcon, LogOutIcon, Package } from 'lucide-react'
 import Image from 'next/image'
 import { signOut } from 'next-auth/react'
+import { XIcon } from 'lucide-react'
 function Nav({user}) {
     const {name, email, role, mobile, image} = user || {}   
     const [open, setOpen] = useState(false)
@@ -14,6 +15,7 @@ function Nav({user}) {
         const handleClickOutside = (event)=>{
             if(ProfileDropdown.current && !ProfileDropdown.current.contains(event.target)){
                 setOpen(false)
+                setSearchbarOpen(false)
             }
         }
         document.addEventListener('mousedown', handleClickOutside)
@@ -94,12 +96,15 @@ function Nav({user}) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="absolute top-12 right-0 w-48 bg-white rounded-lg shadow-lg p-3"
+            className="fixed top-24 left-1/2 -translate-x-1/2 w-[90%] max-w-lg bg-white rounded-full shadow-lg z-40 flex items-center px-4 py-2"
           >
-          <form className='flex items-center bg-white rounded-full px-4 py-2 w-full max-w-lg flex items-center shadow-md space-x-4'>
             <SearchIcon className='w-6 h-6 text-gray-500 mr-2' />
+          <form className='grow'>
             <input type='text' placeholder='Search Groceries...' className='w-full outline-none text-gray-700 placeholder:text-gray-400' />
           </form>
+          <button className='flex items-center py-2 px-4 bg-green-50 rounded-lg gap-2 mt-2 text-gray-800 font-semibold text-sm capitalize hover:text-green-600 transition-colors duration-300 hover:scale-105' onClick={()=>setSearchbarOpen(false)}>
+          <XIcon className='w-6 h-6 text-gray-500' />
+          </button>
           </motion.div>
           )} 
         </AnimatePresence>
