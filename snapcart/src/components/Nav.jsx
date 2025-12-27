@@ -1,12 +1,24 @@
 "use client"
-import React, { useState } from 'react'
+ import React, { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import { AnimatePresence , motion } from 'motion/react'
-import { SearchIcon,  ShoppingCartIcon, UserIcon, LogOutIcon } from 'lucide-react'
+import { SearchIcon,  ShoppingCartIcon, UserIcon, LogOutIcon, Package } from 'lucide-react'
 import Image from 'next/image'
+import { signOut } from 'next-auth/react'
 function Nav({user}) {
     const {name, email, role, mobile, image} = user || {}   
     const [open, setOpen] = useState(false)
+    const [searchbarOpen, setSearchbarOpen] = useState(false)
+    const ProfileDropdown = useRef(null)
+    useEffect(()=>{
+        const handleClickOutside = (event)=>{
+            if(ProfileDropdown.current && !ProfileDropdown.current.contains(event.target)){
+                setOpen(false)
+            }
+        }
+        document.addEventListener('mousedown', handleClickOutside)
+        return ()=>document.removeEventListener('mousedown', handleClickOutside)
+    },[])
   return (
     <>
     <div className='w-[90%] mx-auto fixed top-4 left-1/2 -translate-x-1/2 bg-linear-to-r from-green-500 to-green-700 rounded-2xl shadow-lg shadow-black/30  p-4 flex justify-between items-center h-20 px-4 md:px-8 z-50'>
@@ -18,25 +30,78 @@ function Nav({user}) {
      <input type='text' placeholder='Search Groceries...' className='w-full outline-none text-gray-700 placeholder:text-gray-400' />
     </form>
     <div className='flex items-center md:gap-4  relative '> 
+      <div className='block md:hidden bg-white rounded-full p-2 m-1 w-1/2 max-w-lg flex items-center shadow-md ' onClick={()=>setSearchbarOpen(prev=>!prev)}>
+        <SearchIcon className='w-6 h-6 text-green-600 ' />
+        </div>
       <Link href='/cart' className='relative bg-white rounded-full p-2 m-1'>
         <ShoppingCartIcon className="w-6 h-6 text-green-600 hover:text-gray-200 transition-colors" />
         <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">0</span>
       </Link>
 
-      <div className='relative'>
+      <div className='relative' ref={ProfileDropdown}>
         <AnimatePresence>
         {open && (
-          <motion.div initial={{opacity:0, y:-10, scale:0.95}} animate={{opacity:1, y:0, scale:1}} exit={{opacity:0, y:-10, scale:0.95}} transition={{duration:0.2}} className='absolute top-10 right-0 w-48 bg-white rounded-lg shadow-lg p-2'>
-            <motion.div className='flex w-10 h-10 rounded-full bg-green-500 p-1 m-1 flex items-center justify-center transition-colors overflow-hidden shadow-md  transition-transform duration-300 relative'>
-            {user.image?<Image src={user.image} alt={user.name} width={32} height={32} className='object-cover rounded-full' />:<UserIcon className='w-8 h-8 text-white hover:text-gray-200 transition-colors' />}
-            </motion.div>
-            <div className='text-green-600 font-bold'>{user.name}</div>
-            <div className='text-gray-500 text-sm'>{user.email}</div>
-            <div className='text-gray-500 text-sm'>{user.role}</div>
-            <div className='text-gray-500 text-sm'>{user.mobile}</div>
-            <Link href='/login' className='text-green-600 font-bold'>Logout</Link>
-          </motion.div>
+        <motion.div
+        initial={{ opacity: 0, y: -10, scale: 0.95 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: -10, scale: 0.95 }}
+        transition={{ duration: 0.2 }}
+        className="absolute top-12 right-0 w-48 bg-white rounded-lg shadow-lg p-3"
+      >
+        {/* Profile Section */}
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center overflow-hidden shadow-md">
+            {user.image ? (
+              <Image
+                src={user.image}
+                alt={user.name}
+                width={40}
+                height={40}
+                className="object-cover rounded-full"
+              />
+            ) : (
+              <UserIcon className="w-8 h-8 text-white" />
+            )}
+          </div>
+      
+          <div>
+            <div className="text-gray-800 font-semibold leading-tight">
+              {user.name}
+            </div>
+            <div className="text-gray-500 text-xs capitalize">
+              {user.role}
+            </div>
+          </div>
+        </div>
+      
+        {/* Logout */}
+        <Link href='/orders' className='flex items-center py-2 px-4 bg-green-50 rounded-lg gap-2 mt-2 text-gray-800 font-semibold text-sm capitalize hover:text-green-600 transition-colors duration-300 hover:scale-105' onClick={()=>setOpen(false)}>
+        <Package className='w-4 h-4 text-green-600' />
+        <span className=''>My Orders</span>
+        </Link>
+        <button className='flex items-center py-2 px-4 bg-green-50 rounded-lg gap-2 mt-2 text-gray-800 font-semibold text-sm capitalize hover:text-green-600 transition-colors duration-300 hover:scale-105' onClick={()=>{setOpen(false); signOut({callbackUrl: '/login'})}}> 
+          <LogOutIcon className='w-4 h-4 text-red-600' />
+        <span className='text-red-600'>Logout</span>
+        </button>
+      </motion.div>
+      
         )}
+        </AnimatePresence>
+        <AnimatePresence>
+          {searchbarOpen && (
+            <motion.div
+            initial={{ opacity: 0, y: -10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -10, scale: 0.95 }}
+            transition={{ duration: 0.2 }}
+            className="absolute top-12 right-0 w-48 bg-white rounded-lg shadow-lg p-3"
+          >
+          <form className='flex items-center bg-white rounded-full px-4 py-2 w-full max-w-lg flex items-center shadow-md space-x-4'>
+            <SearchIcon className='w-6 h-6 text-gray-500 mr-2' />
+            <input type='text' placeholder='Search Groceries...' className='w-full outline-none text-gray-700 placeholder:text-gray-400' />
+          </form>
+          </motion.div>
+          )} 
         </AnimatePresence>
       <div className='relative w-10 h-10 rounded-full bg-white p-1 m-1 flex items-center justify-center hover:bg-gray-100 transition-colors overflow-hidden shadow-md hover:shadow-lg hover:scale-105 transition-transform duration-300 relative' onClick={()=>setOpen(prev=>!prev)}>
         {user.image?<Image src={user.image} alt={user.name} width={32} height={32} className='object-cover rounded-full' />:<UserIcon className='w-8 h-8 text-green-600 hover:text-gray-200 transition-colors' />}
