@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import { motion } from 'motion/react'
-import { Leaf, Smartphone, Truck } from 'lucide-react';
+import { Leaf, ShoppingBasket, Smartphone, Truck } from 'lucide-react';
 import { AnimatePresence } from 'motion/react';
 import Image from 'next/image';
 function HeroSection() {
@@ -57,15 +57,30 @@ function HeroSection() {
                     <div className='absolute inset-0 bg-cover bg-center bg-no-repeat'></div>
                     <Image src={slides[currentSlide].bg} alt={slides[currentSlide].title} fill className='object-cover' />
                     <div className='absolute inset-0 bg-black/50' />
-                    <div className='absolute inset-0 flex flex-col items-center justify-center text-white'>
-                        <h1 className='text-4xl font-bold'>{slides[currentSlide].title}</h1>
-                        <p className='text-lg'>{slides[currentSlide].description}</p>
-                        <button className='bg-green-500 text-white px-4 py-2 rounded-md'>{slides[currentSlide].btnText}</button>
+                    <div className='absolute inset-0 flex flex-col items-center justify-center text-white bg-black/50 backdrop-blur-[1px]'>
+                        <div className='flex items-center justify-center space-x-4'>
+                            {slides[currentSlide].icon}
+                        </div>
+                        <div className='flex flex-col items-center justify-center'>
+                            <h1 className='text-4xl font-bold'>{slides[currentSlide].title}</h1>
+                            <p className='text-lg'>{slides[currentSlide].description}</p>
+
+                            <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}  transition={{ duration: 0.3 }} className='bg-white text-green-500 px-6 py-3 rounded-full flex items-center justify-center space-x-2'>
+                                <ShoppingBasket className='w-6 h-6 text-green-500 mr-2' />
+                                {slides[currentSlide].btnText}
+                            </motion.button>
+                        </div>
                     </div>
                 </motion.div>
             </AnimatePresence>
-            
+            <div className='absolute bottom-0 left-0 w-full h-10  backdrop-blur-[1px] flex items-center justify-center'>
+                <motion.div className='flex items-center justify-center space-x-4'>
+                    {slides.map((slide) => (
+                        <motion.div key={slide.id} className={`w-3 h-3 rounded-full cursor-pointer ${currentSlide === slide.id-1 ? 'bg-green-500' : 'bg-white/50'}`} whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.9 }} transition={{ duration: 0.3 }} onClick={()=>setCurrentSlide(slide.id-1)} />
+                    ))}
+                </motion.div>
+            </div>
         </div>
-    )
+    );
 }
-export default HeroSection
+export default HeroSection;
