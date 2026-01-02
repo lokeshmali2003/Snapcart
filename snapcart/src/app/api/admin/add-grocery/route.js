@@ -15,8 +15,20 @@ export async function POST(req) {
         const category = formData.get("category");
         const unit = formData.get("unit");
         const file = formData.get("file"); // image file
-
-     
+        if(file){
+            const image = await cloudinary.uploader.upload(file, {
+                folder: "grocery",
+                resource_type: "image",
+            });
+        }
+        const grocery = await Grocery.create({
+            name,
+            price,
+            category,
+            unit,
+            image: image?.secure_url,
+        });
+        return NextResponse.json({message: "Grocery Added Successfully", grocery}, {status: 200});
     } catch (error) {
 
     }}
